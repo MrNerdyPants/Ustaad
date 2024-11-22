@@ -1,6 +1,7 @@
 package com.dust.search.engine.ustaad.crawler.service;
 
-import org.jsoup.*;
+import com.dust.search.engine.ustaad.crawler.entity.CrawledSite;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -10,8 +11,11 @@ import org.springframework.stereotype.Service;
 public class CrawlerService {
     private final UrlQueueService urlQueueService;
 
-    public CrawlerService(UrlQueueService urlQueueService) {
+    private final CrawledSiteService siteService;
+
+    public CrawlerService(UrlQueueService urlQueueService, CrawledSiteService siteService) {
         this.urlQueueService = urlQueueService;
+        this.siteService = siteService;
     }
 
     public void startCrawling(String seedUrl) {
@@ -45,6 +49,7 @@ public class CrawlerService {
     private void saveCrawledData(String url, String content) {
         // Implement saving logic (e.g., to a database)
         System.out.println("Saving content for URL: " + url);
+        siteService.save(new CrawledSite( url, content));
     }
 }
 
