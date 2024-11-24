@@ -1,19 +1,23 @@
 package com.dust.search.engine.ustaad.crawler.service;
 
-import com.dust.search.engine.ustaad.crawler.entity.CrawledSite;
+import com.dust.search.engine.ustaad.crawler.entity.CrawledPage;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CrawlerService {
     private final UrlQueueService urlQueueService;
 
-    private final CrawledSiteService siteService;
+    private final CrawledPageService siteService;
 
-    public CrawlerService(UrlQueueService urlQueueService, CrawledSiteService siteService) {
+    public CrawlerService(UrlQueueService urlQueueService, CrawledPageService siteService) {
         this.urlQueueService = urlQueueService;
         this.siteService = siteService;
     }
@@ -25,9 +29,12 @@ public class CrawlerService {
             String url = urlQueueService.getNextUrl();
             if (url == null) break; // Exit when the queue is empty
 
+            if (siteService.existByUrl(url)) continue;
+
             try {
                 // Fetch the content
-                Document document = Jsoup.connect(url).get();
+                Connection connection = Jsoup.connect(url);
+                Document document = connection.get();
                 System.out.println("Crawled URL: " + url);
 
                 // Extract links
@@ -37,8 +44,9 @@ public class CrawlerService {
                     urlQueueService.addUrl(nextUrl);
                 }
 
+
                 // Optionally: Save the crawled content
-                saveCrawledData(url, document.body().text());
+                saveCrawledData(url, document);
 
             } catch (Exception e) {
                 System.err.println("Failed to crawl URL: " + url);
@@ -46,10 +54,51 @@ public class CrawlerService {
         }
     }
 
-    private void saveCrawledData(String url, String content) {
+    private void saveCrawledData(String url, Document document) {
         // Implement saving logic (e.g., to a database)
         System.out.println("Saving content for URL: " + url);
-        siteService.save(new CrawledSite( url, content));
+
+        // Extract data
+        String title = document.title();
+        String metaDescription = document.select("meta[name=description]").attr("content");
+        String keywords = document.select("meta[name=keywords]").attr("content");
+
+        // Extract headers
+        List<String> headers = document.select("h1, h2, h3, h4, h5, h6")
+                .stream()
+                .map(Element::text)
+                .collect(Collectors.toList());
+
+        // Extract outbound links
+        List<String> outboundLinks = document.select("a[href]")
+                .stream()
+                .map(link -> link.attr("abs:href"))
+                .distinct()
+                .collect(Collectors.toList());
+
+        // Extract main content
+        String mainContent = document.body().text();
+
+        // Extract canonical URL
+        String canonicalUrl = document.select("link[rel=canonical]").attr("href");
+
+        // Extract language
+        String language = document.select("html").attr("lang");
+
+        // Create CrawledPage entity
+        CrawledPage crawledPage = new CrawledPage();
+        crawledPage.setUrl(url);
+        crawledPage.setTitle(title);
+        crawledPage.setMetaDescription(metaDescription);
+        crawledPage.setKeywords(keywords);
+        crawledPage.setMainContent(mainContent);
+        crawledPage.setHeaders(headers);
+        crawledPage.setOutboundLinks(outboundLinks);
+        crawledPage.setCanonicalUrl(canonicalUrl);
+        crawledPage.setLanguage(language);
+        crawledPage.setHttpStatusCode(200);
+
+        siteService.save(crawledPage);
     }
 }
 

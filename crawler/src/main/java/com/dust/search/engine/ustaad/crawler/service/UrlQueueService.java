@@ -7,13 +7,16 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static com.dust.search.engine.ustaad.crawler.util.UtilityService.matchFormUrlFilter;
+
 @Service
 public class UrlQueueService {
     private final Queue<String> urlQueue = new ConcurrentLinkedQueue<>();
     private final Set<String> visitedUrls = ConcurrentHashMap.newKeySet();
 
     public void addUrl(String url) {
-        if (!visitedUrls.contains(url)) {
+
+        if (!visitedUrls.contains(url) && !matchFormUrlFilter(url)) {
             urlQueue.add(url);
             visitedUrls.add(url);
         }
