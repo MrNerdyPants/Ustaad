@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.MalformedURLException;
+
 @RestController
 @RequestMapping("/crawler")
 public class CrawlerController {
@@ -18,7 +20,13 @@ public class CrawlerController {
 
     @PostMapping("/start")
     public ResponseEntity<String> startCrawler(@RequestParam String seedUrl) {
-        new Thread(() -> crawlerService.startCrawling(seedUrl)).start();
+        new Thread(() -> {
+            try {
+                crawlerService.startCrawling(seedUrl);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }).start();
         return ResponseEntity.ok("Crawling started for seed URL: " + seedUrl);
     }
 }

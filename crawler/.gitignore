@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/%$JAVA_H
+/src/main/resources/netsolpk.crt
+/src/main/resources/netsolpk.p7c
+/src/main/resources/www.netsolpk.com

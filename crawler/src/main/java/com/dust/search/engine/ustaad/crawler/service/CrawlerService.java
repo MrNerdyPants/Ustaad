@@ -8,8 +8,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.dust.search.engine.ustaad.crawler.service.RobotParser.robotSafe;
 
 @Service
 public class CrawlerService {
@@ -22,7 +26,7 @@ public class CrawlerService {
         this.siteService = siteService;
     }
 
-    public void startCrawling(String seedUrl) {
+    public void startCrawling(String seedUrl) throws MalformedURLException {
         urlQueueService.addUrl(seedUrl);
 
         while (true) {
@@ -30,6 +34,15 @@ public class CrawlerService {
             if (url == null) break; // Exit when the queue is empty
 
             if (siteService.existByUrl(url)) continue;
+
+            try {
+                URL site = new URL(url);
+                if (!robotSafe(new URL(url))) {
+                    continue;
+                }
+            } catch (Exception e) {
+                continue;
+            }
 
             try {
                 // Fetch the content
