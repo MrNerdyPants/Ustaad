@@ -1,4 +1,4 @@
-package com.dust.search.engine.ustaad.crawler.enums;
+package com.dust.search.engine.ustaad.indexer.enums;
 
 import lombok.Getter;
 

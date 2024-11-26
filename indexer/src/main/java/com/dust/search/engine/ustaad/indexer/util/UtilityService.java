@@ -1,6 +1,7 @@
-package com.dust.search.engine.ustaad.crawler.util;
+package com.dust.search.engine.ustaad.indexer.util;
 
-import com.dust.search.engine.ustaad.crawler.enums.UrlFilterWordsAndSites;
+
+import com.dust.search.engine.ustaad.indexer.enums.UrlFilterWordsAndSites;
 
 public class UtilityService {
     public static Boolean matchFormUrlFilter(String word) {

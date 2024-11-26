@@ -1,5 +1,5 @@
 
-package com.dust.search.engine.ustaad.crawler.entity;
+package com.dust.search.engine.ustaad.indexer.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,6 +1,7 @@
-package com.dust.search.engine.ustaad.crawler.util;
+package com.dust.search.engine.ustaad.indexer.util;
 
-import com.dust.search.engine.ustaad.crawler.dto.RobotRule;
+
+import com.dust.search.engine.ustaad.indexer.dto.RobotRule;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;

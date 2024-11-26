@@ -1,7 +1,7 @@
-package com.dust.search.engine.ustaad.crawler.repository;
+package com.dust.search.engine.ustaad.indexer.repository;
 
 
-import com.dust.search.engine.ustaad.crawler.entity.CrawledPage;
+import com.dust.search.engine.ustaad.indexer.entity.CrawledPage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

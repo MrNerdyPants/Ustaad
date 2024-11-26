@@ -1,4 +1,4 @@
-package com.dust.search.engine.ustaad.crawler.dto;
+package com.dust.search.engine.ustaad.indexer.dto;
 
 public class RobotRule {
     public String userAgent;
