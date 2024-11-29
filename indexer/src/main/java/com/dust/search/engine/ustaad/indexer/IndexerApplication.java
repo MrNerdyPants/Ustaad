@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class IndexerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(IndexerApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(IndexerApplication.class, args);
+    }
 
 }
