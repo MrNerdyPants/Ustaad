@@ -20,7 +20,7 @@ public class CrawledPageService {
 
     public List<CrawledPage> consume() {
         List<CrawledPage> crawledPages = crawledPageRepository.findAllByIdGreaterThan(consumedRecordId, Pageable.ofSize(pageSize));
-        consumedRecordId += pageSize;
+        consumedRecordId += crawledPages.size();
         return crawledPages;
     }
 
